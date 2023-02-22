@@ -53,7 +53,7 @@ class DCCMCalculation:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--atoms', type=str, required=False)
-    parser.add_argument("--ref", help=".pdb reference file matrix",
+    parser.add_argument("--ref", help="Reference file",
                         type=lambda file_name: ArgumentParserFileExtensionValidation((".pdb, .gro, .psf, .top, .crd"),
                                                                                      file_name).validate_file_extension(),
                         required=True)
