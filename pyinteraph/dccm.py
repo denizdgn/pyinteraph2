@@ -1,4 +1,6 @@
 import argparse
+import logging
+import sys
 from collections import OrderedDict
 import functools
 
@@ -8,17 +10,23 @@ import itertools
 
 from dat2graphml import ArgumentParserFileExtensionValidation
 
+logging.basicConfig(
+    stream=sys.stdout,
+    level=logging.INFO,
+    format="[%(asctime)s] %(levelname)s | %(message)s",
+    datefmt="%Y/%m/%d %H:%M:%S"
+)
+
+logger = logging.getLogger(__name__)
+
 
 class DCCMCalculation:
-    selected_atoms_mapping = {
-        "CA": "name CA",
-    }
 
-    def __init__(self, ref, traj, atoms):
+    def __init__(self, ref, traj, atoms, backbone):
         self.trajectory = mda.Universe(ref, traj)
         self.n_frames = self.trajectory.trajectory.n_frames
         self.n_residues = self.trajectory.residues.residues.n_residues
-        self.selected_atoms = self.selected_atoms_mapping.get(atoms, self.selected_atoms_mapping["CA"])
+        self.selected_atoms = "backbone" if backbone else f"name {atoms.replace(',', ' ')}"
 
     @property
     @functools.lru_cache()
@@ -26,6 +34,7 @@ class DCCMCalculation:
         residues = OrderedDict()
         for res in self.trajectory.residues:
             residues[f"{res.resnum}{res.resname}"] = res.atoms.select_atoms(self.selected_atoms).atoms.ix_array
+            print(residues[f"{res.resnum}{res.resname}"])
         return residues
 
     @property
@@ -53,6 +62,7 @@ class DCCMCalculation:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--atoms', type=str, required=False)
+    parser.add_argument('--backbone', action='store_true', required=False)
     parser.add_argument("--ref", help="Reference file",
                         type=lambda file_name: ArgumentParserFileExtensionValidation((".pdb, .gro, .psf, .top, .crd"),
                                                                                      file_name).validate_file_extension(),
@@ -63,7 +73,12 @@ def main():
                         required=True)
     args = parser.parse_args()
 
-    dccm = DCCMCalculation(args.ref, args.traj, args.atoms)
+    backbone = False
+    if (args.atoms and args.backbone) or not args.atoms:
+       logger.warning(f"Backbone atoms will be utilized to compute dccm.")
+       backbone = True
+
+    dccm = DCCMCalculation(args.ref, args.traj, args.atoms, backbone)
     dccm.to_csv()
 
 
