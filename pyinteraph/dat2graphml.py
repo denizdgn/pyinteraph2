@@ -38,7 +38,7 @@ class ArgumentParserFileExtensionValidation(argparse.FileType):
     def validate_file_extension(self):
         given_extension = os.path.splitext(self.file_name)[1][1:]
         if given_extension not in self.valid_extensions:
-            self.parser.error(f"Please provide a valid format: {self.valid_extensions}")
+            self.parser.error(f"Please provide a valid file format: {self.valid_extensions}")
         return self.file_name
 
 warnings.filterwarnings("ignore")
