@@ -34,7 +34,6 @@ class DCCMCalculation:
         residues = OrderedDict()
         for res in self.trajectory.residues:
             residues[f"{res.resnum}{res.resname}"] = res.atoms.select_atoms(self.selected_atoms).atoms.ix_array
-            print(residues[f"{res.resnum}{res.resname}"])
         return residues
 
     @property
