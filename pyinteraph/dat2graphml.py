@@ -19,37 +19,18 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import os
 
 import argparse
 import functools
-import logging
 import networkx as nx
 import numpy as np
 import MDAnalysis as mda
 import warnings
 
-class ArgumentParserFileExtensionValidation(argparse.FileType):
-    parser = argparse.ArgumentParser()
-    def __init__(self, valid_extensions, file_name):
-        self.valid_extensions = valid_extensions
-        self.file_name = file_name
-
-    def validate_file_extension(self):
-        given_extension = os.path.splitext(self.file_name)[1][1:]
-        if given_extension not in self.valid_extensions:
-            self.parser.error(f"Please provide a valid file format: {self.valid_extensions}")
-        return self.file_name
+from pyinteraph.core import logger
+from pyinteraph.core.validate_parser_file_extension import ArgumentParserFileExtensionValidation
 
 warnings.filterwarnings("ignore")
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.INFO,
-    format="[%(asctime)s] %(levelname)s | %(message)s",
-    datefmt="%Y/%m/%d %H:%M:%S"
-)
-
-logger = logging.getLogger(__name__)
 
 class ReformatDatGraph:
     def __init__(self, interaction_network_file, output_name, reference_structure_file=None):
