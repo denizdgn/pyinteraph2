@@ -8,7 +8,7 @@ from pyinteraph.core.residue_coordinate_matrix import ResidueCoordinateMatrix
 from pyinteraph.core.validate_parser_file_extension import ArgumentParserFileExtensionValidation
 
 
-class DCCMCalculation:
+class DCCMAnalyzer:
     def __init__(self, residue_coordinate_matrix: ResidueCoordinateMatrix) -> None:
         self.residue_coordinate_matrix = residue_coordinate_matrix
 
@@ -48,7 +48,7 @@ def main():
         backbone = True
 
     residue_coordinate_matrix = ResidueCoordinateMatrix(args.ref, args.traj, args.atoms, backbone)
-    DCCMCalculation(residue_coordinate_matrix).to_csv()
+    DCCMAnalyzer(residue_coordinate_matrix).to_csv()
 
 
 if __name__ == "__main__":
