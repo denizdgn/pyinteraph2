@@ -8,12 +8,10 @@ from pyinteraph.core import logger
 
 
 class ResidueCoordinateMatrix:
-    def __init__(self, ref: str, traj: str, atoms: str, backbone: bool, keep_3d_coordinates: bool) -> None:
+    def __init__(self, ref: str, traj: str, atoms: str, backbone: bool) -> None:
         self.ref = ref
         self.traj = traj
         self.selected_atoms = "backbone" if backbone else f"name {atoms.replace(',', ' ')}"
-        self.keep_3d_coordinates = keep_3d_coordinates
-        self.coordinates_by_residue_matrix_shape = (self.n_residues, self.n_frames, 3) if keep_3d_coordinates else (self.n_residues, self.n_frames)
 
     @property
     @functools.lru_cache()
@@ -41,13 +39,11 @@ class ResidueCoordinateMatrix:
     @property
     @functools.lru_cache()
     def coordinates_by_residue(self) -> np.ndarray:
-        traj_by_res = np.zeros(shape=self.coordinates_by_residue_matrix_shape)
+        traj_by_res = np.zeros(shape=(self.n_residues, self.n_frames))
         for i, traj in enumerate(self.trajectory.trajectory):
             for res_num in range(0, self.n_residues):
                 traj_by_res[res_num][traj.frame] = self.get_atomic_positions_by_geometric_center(traj, res_num)
         return traj_by_res
 
     def get_atomic_positions_by_geometric_center(self, traj, res_num):
-        if not self.keep_3d_coordinates:
-            return np.mean(traj.positions[list(self.residues_with_atom_number.values())[res_num]])
-        return np.mean(traj.positions[list(self.residues_with_atom_number.values())[res_num]], axis=0)
+        return np.mean(traj.positions[list(self.residues_with_atom_number.values())[res_num]])

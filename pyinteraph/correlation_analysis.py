@@ -10,12 +10,12 @@ from pyinteraph.core.validate_parser_file_extension import ArgumentParserFileExt
 warnings.filterwarnings("ignore")
 
 def run_dccm(args, backbone):
-    residue_coordinate_matrix = ResidueCoordinateMatrix(args.ref, args.traj, args.atoms, backbone, keep_3d_coordinates=False)
+    residue_coordinate_matrix = ResidueCoordinateMatrix(args.ref, args.traj, args.atoms, backbone)
     DCCMAnalyzer(residue_coordinate_matrix, threshold=args.threshold).to_csv(file_name="dccm")
 
 
 def run_lmi(args, backbone):
-    residue_coordinate_matrix = ResidueCoordinateMatrix(args.ref, args.traj, args.atoms, backbone, keep_3d_coordinates=False)
+    residue_coordinate_matrix = ResidueCoordinateMatrix(args.ref, args.traj, args.atoms, backbone)
     LMIAnalyzer(residue_coordinate_matrix, threshold=args.threshold).to_csv(file_name="lmi")
 
 
