@@ -35,18 +35,21 @@ package_data = {"pyinteraph" : \
                    "ff_masses/*"]}
 
 package_dir = {"libinteract" : "libinteract",
-               "pyinteraph" : "pyinteraph"}
+               "pyinteraph" : "pyinteraph",
+               "core": "pyinteraph.core",
+               "correlation": "pyinteraph.correlation"}
 
-packages = ["libinteract", "pyinteraph"]
+packages = ["libinteract", "pyinteraph", "pyinteraph.core", "pyinteraph.correlation"]
 
-entry_points = {"console_scripts" : [\
+entry_points = {"console_scripts" : [
                   "pyinteraph = pyinteraph.main:main",
                   "graph_analysis = pyinteraph.graph_analysis:main",
                   "filter_graph = pyinteraph.filter_graph:main",
                   "parse_masses = pyinteraph.parse_masses:main",
                   "path_analysis = pyinteraph.path_analysis:main",
                   "centrality_analysis = pyinteraph.centrality_analysis:main",
-                  "dat2graphml = pyinteraph.dat2graphml:main"]}
+                  "dat2graphml = pyinteraph.dat2graphml:main",
+                  "correlation = pyinteraph.correlation_analysis:main"]}
 
 install_requires = ["cython",
                     "biopython",
